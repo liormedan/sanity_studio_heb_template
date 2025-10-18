@@ -21,19 +21,27 @@ export default defineType({
       },
     }),
     defineField({
+      name: 'heroImage',
+      title: 'תמונה ראשית',
+      type: 'mainImage',
+    }),
+    defineField({
       name: 'content',
       title: 'תוכן',
-      type: 'array',
-      of: [{type: 'block'}],
+      type: 'blockContent',
     }),
     defineField({
       name: 'publishedAt',
       title: 'תאריך פרסום',
       type: 'datetime',
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+    }),
   ],
   preview: {
     select: {title: 'title', subtitle: 'slug.current'},
   },
 })
-

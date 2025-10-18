@@ -2,9 +2,8 @@ import {defineConfig} from 'sanity'
 import {deskTool, defaultDocumentActions} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
 import RtlLayout from './src/components/RtlLayout'
+import HebrewNavbar from './src/components/HebrewNavbar'
 import {schemaTypes} from './src/schemas'
-import sideMenuTool from './src/tools/sideMenu'
-import onboardingTool from './src/tools/onboarding'
 
 export default defineConfig({
   name: 'hebrew-content-studio',
@@ -73,7 +72,7 @@ export default defineConfig({
               ),
             S.divider(),
             S.listItem()
-              .id('accountGroupPublic')
+              .id('accountGroup')
               .title('חשבון')
               .child(
                 S.list()
@@ -159,15 +158,16 @@ export default defineConfig({
           ]),
     }),
     visionTool({name: 'vision', title: 'שאילתות'}),
-    sideMenuTool(),
-    onboardingTool(),
   ],
 
-  
+  schema: {
+    types: schemaTypes,
+  },
 
   studio: {
     components: {
       layout: RtlLayout,
+      navbar: HebrewNavbar,
     },
   },
 
@@ -219,3 +219,4 @@ export default defineConfig({
     ],
   },
 })
+
