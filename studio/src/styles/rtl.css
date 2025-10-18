@@ -1,0 +1,19 @@
+/* בסיס RTL לכל הסטודיו */
+:root,
+body,
+.hebrew-rtl {
+  direction: rtl;
+}
+
+/* יישור טקסט לימין כברירת מחדל */
+.hebrew-rtl,
+.hebrew-rtl * {
+  text-align: right;
+}
+
+/* תפריטים וסרגל עליון ב-RTL */
+.sanity-studio__navbar,
+[data-ui='ToolMenu'] {
+  direction: rtl;
+}
+
