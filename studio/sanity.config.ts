@@ -5,6 +5,7 @@ import RtlLayout from './src/components/RtlLayout'
 import {schemaTypes} from './src/schemas'
 import sideMenuTool from './src/tools/sideMenu'
 import onboardingTool from './src/tools/onboarding'
+import docsTool from './src/tools/docs'
 
 export default defineConfig({
   name: 'hebrew-content-studio',
@@ -161,6 +162,7 @@ export default defineConfig({
     visionTool({name: 'vision', title: 'שאילתות'}),
     sideMenuTool(),
     onboardingTool(),
+    docsTool(),
   ],
 
   

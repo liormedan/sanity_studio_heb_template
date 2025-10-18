@@ -20,7 +20,7 @@ function useActivePath() {
 export default function AppSidebar() {
   const active = useActivePath()
   const [q, setQ] = useState('')
-  const [open, setOpen] = useState({content: true, account: true, globals: true})
+  const [open, setOpen] = useState({content: true, account: true, globals: true, help: true})
   const projectId = (import.meta as any).env.SANITY_STUDIO_PROJECT_ID as string | undefined
   const manageBase = projectId ? `https://www.sanity.io/manage/project/${projectId}` : 'https://www.sanity.io/manage'
 
@@ -88,6 +88,24 @@ export default function AppSidebar() {
       ))}
 
       <div className="mt-auto pt-3 border-t">
+        <div className="mb-2">
+          <button
+            type="button"
+            onClick={() => setOpen((s) => ({...s, help: !s.help}))}
+            className="flex w-full items-center justify-between rounded-md px-3 py-2 hover:bg-white/10"
+          >
+            <span className="font-medium">עזרה</span>
+            {open.help ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          </button>
+          {open.help && (
+            <SidebarGroup>
+              <SidebarButton href="/docs" active={active.includes('/docs')}>
+                <ListTree size={16} />
+                <SidebarLabel>תיעוד</SidebarLabel>
+              </SidebarButton>
+            </SidebarGroup>
+          )}
+        </div>
         <SidebarGroup title="פעולות" >
           <SidebarButton href={manageBase} target="_blank" rel="noreferrer">
             <ExternalLink size={16} />
