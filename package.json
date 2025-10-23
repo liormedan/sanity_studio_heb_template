@@ -1,0 +1,22 @@
+{
+  "name": "hebrew-website-monorepo",
+  "version": "1.0.0",
+  "description": "מערכת ניהול תוכן בעברית - Sanity + Next.js",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:studio\" \"npm run dev:website\"",
+    "dev:studio": "cd studio && npm run dev",
+    "dev:website": "cd website && npm run dev",
+    "build": "npm run build:studio && npm run build:website",
+    "build:studio": "cd studio && npm run build",
+    "build:website": "cd website && npm run build",
+    "install:all": "npm install && cd studio && npm install && cd ../website && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "studio",
+    "website"
+  ]
+}

@@ -1,171 +1,134 @@
 import {defineConfig} from 'sanity'
-import {deskTool, defaultDocumentActions} from 'sanity/desk'
+import {deskTool} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
 import RtlLayout from './src/components/RtlLayout'
-import {schemaTypes} from './src/schemas'
-import sideMenuTool from './src/tools/sideMenu'
-import onboardingTool from './src/tools/onboarding'
-import docsTool from './src/tools/docs'
+
+// סכמות פשוטות
+import page from './src/schemas/page'
+import category from './src/schemas/category'
+import siteSettings from './src/schemas/siteSettings'
+
+// אובייקטים
+import seo from './src/schemas/objects/seo'
+import mainImage from './src/schemas/objects/mainImage'
+import blockContent from './src/schemas/objects/blockContent'
+
+// פוסט פשוט
+import {defineField, defineType} from 'sanity'
+
+const simplePost = defineType({
+  name: 'post',
+  title: 'פוסט',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title', 
+      title: 'כותרת', 
+      type: 'string', 
+      validation: (R) => R.required()
+    }),
+    defineField({
+      name: 'slug', 
+      title: 'נתיב', 
+      type: 'slug', 
+      options: {source: 'title'},
+      validation: (R) => R.required()
+    }),
+    defineField({
+      name: 'excerpt', 
+      title: 'תקציר', 
+      type: 'text', 
+      rows: 2
+    }),
+    defineField({
+      name: 'categories', 
+      title: 'קטגוריות', 
+      type: 'array', 
+      of: [{type: 'reference', to: [{type: 'category'}]}]
+    }),
+    defineField({
+      name: 'publishedAt', 
+      title: 'תאריך פרסום', 
+      type: 'datetime',
+      initialValue: () => new Date().toISOString()
+    }),
+    defineField({
+      name: 'mainImage', 
+      title: 'תמונה ראשית', 
+      type: 'mainImage'
+    }),
+    defineField({
+      name: 'body', 
+      title: 'תוכן', 
+      type: 'blockContent'
+    }),
+  ],
+  preview: {
+    select: {title: 'title', subtitle: 'excerpt', media: 'mainImage'},
+  },
+})
 
 export default defineConfig({
   name: 'hebrew-content-studio',
-  title: 'סטודיו תוכן בעברית',
+  title: 'סטודיו תוכן בעברית - פשוט',
 
   projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   dataset: process.env.SANITY_STUDIO_DATASET!,
 
-  basePath: '/',
-
   plugins: [
     deskTool({
-      name: 'desk',
-      title: 'ניהול תוכן',
-      structure: (S, context) =>
+      structure: (S) =>
         S.list()
           .id('root')
-          .title('תוכן')
+          .title('תוכן האתר')
           .items([
-            S.divider(),
+            // פוסטים
             S.listItem()
-              .id('contentGroup')
-              .title('תוכן')
+              .id('posts')
+              .title('📝 פוסטים')
               .child(
-                S.list()
-                  .id('contentList')
-                  .title('תוכן')
-                  .items([
-                    S.listItem()
-                      .id('pages')
-                      .title('דפים')
-                      .schemaType('page')
-                      .child(
-                        S.documentTypeList('page')
-                          .id('pageList')
-                          .title('דפים')
-                      ),
-                    S.listItem()
-                      .id('posts')
-                      .title('פוסטים')
-                      .schemaType('post')
-                      .child(
-                        S.documentTypeList('post')
-                          .id('postList')
-                          .title('פוסטים')
-                      ),
-                    S.listItem()
-                      .id('categories')
-                      .title('קטגוריות')
-                      .schemaType('category')
-                      .child(
-                        S.documentTypeList('category')
-                          .id('categoryList')
-                          .title('קטגוריות')
-                      ),
-                    S.listItem()
-                      .id('authors')
-                      .title('מחברים')
-                      .schemaType('author')
-                      .child(
-                        S.documentTypeList('author')
-                          .id('authorList')
-                          .title('מחברים')
-                      ),
-                  ])
+                S.documentTypeList('post')
+                  .id('postsList')
+                  .title('כל הפוסטים')
               ),
-            S.divider(),
+            
+            // דפים
             S.listItem()
-              .id('accountGroupPublic')
-              .title('חשבון')
+              .id('pages')
+              .title('📄 דפים')
               .child(
-                S.list()
-                  .id('accountList')
-                  .title('חשבון')
-                  .items([
-                    S.listItem()
-                      .id('accountDoc')
-                      .title('פרטי חשבון')
-                      .schemaType('account')
-                      .child(
-                        S.document()
-                          .schemaType('account')
-                          .documentId('account')
-                          .title('פרטי חשבון')
-                      ),
-                    S.listItem()
-                      .id('secretsDoc')
-                      .title('סודות חיבור')
-                      .schemaType('secrets')
-                      .child(
-                        S.document()
-                          .schemaType('secrets')
-                          .documentId('secrets')
-                          .title('סודות חיבור')
-                      ),
-                  ])
+                S.documentTypeList('page')
+                  .id('pagesList')
+                  .title('כל הדפים')
               ),
-            ...(context.currentUser?.roles?.some((r: any) => ['administrator', 'developer'].includes(r.name))
-              ? [
-                  S.listItem()
-                    .id('accountGroup')
-                    .title('חשבון')
-                    .child(
-                      S.list()
-                        .id('accountList')
-                        .title('חשבון')
-                        .items([
-                          S.listItem()
-                            .id('accountDoc')
-                            .title('פרטי חשבון')
-                            .schemaType('account')
-                            .child(
-                              S.document()
-                                .schemaType('account')
-                                .documentId('account')
-                                .title('פרטי חשבון')
-                            ),
-                          S.listItem()
-                            .id('secretsDoc')
-                            .title('סודות חיבור')
-                            .schemaType('secrets')
-                            .child(
-                              S.document()
-                                .schemaType('secrets')
-                                .documentId('secrets')
-                                .title('סודות חיבור')
-                            ),
-                        ])
-                    ),
-                ]
-              : []),
+            
+            // קטגוריות
             S.listItem()
-              .id('globals')
-              .title('גלובלים')
+              .id('categories')
+              .title('🏷️ קטגוריות')
               .child(
-                S.list()
-                  .id('globalsList')
-                  .title('גלובלים')
-                  .items([
-                    S.listItem()
-                      .id('siteSettings')
-                      .title('הגדרות אתר')
-                      .schemaType('siteSettings')
-                      .child(
-                        S.document()
-                          .schemaType('siteSettings')
-                          .documentId('siteSettings')
-                          .title('הגדרות אתר')
-                      ),
-                  ])
+                S.documentTypeList('category')
+                  .id('categoriesList')
+                  .title('כל הקטגוריות')
+              ),
+
+            S.divider(),
+            
+            // הגדרות
+            S.listItem()
+              .id('siteSettings')
+              .title('⚙️ הגדרות האתר')
+              .child(
+                S.document()
+                  .schemaType('siteSettings')
+                  .documentId('siteSettings')
+                  .id('siteSettingsDoc')
+                  .title('הגדרות האתר')
               ),
           ]),
     }),
-    visionTool({name: 'vision', title: 'שאילתות'}),
-    sideMenuTool(),
-    onboardingTool(),
-    docsTool(),
+    visionTool(),
   ],
-
-  
 
   studio: {
     components: {
@@ -173,51 +136,18 @@ export default defineConfig({
     },
   },
 
-  // Customize tool list: Hebrew titles, hide unsupported tools
-  tools: (prev) =>
-    prev
-      // hide Tasks tool if present
-      .filter((tool) => tool.name !== 'tasks')
-      // ensure Vision title is Hebrew
-      .map((tool) => (tool.name === 'vision' ? {...tool, title: 'שאילתות'} : tool)),
-
-  document: {
-    // Limit actions for singleton documents
-    actions: (prev, context) => {
-      const singletons = ['siteSettings', 'account', 'secrets']
-      if (singletons.includes(context.schemaType)) {
-        return prev.filter((action: any) => !['duplicate', 'delete'].includes(action.action))
-      }
-      return prev
-    },
-    // Optional: label singletons
-    // badges: (prev, context) => {
-    //   const singletons = ['siteSettings', 'account', 'secrets']
-    //   if (singletons.includes(context.schemaType)) return [{label: 'Singleton'}]
-    //   return prev
-    // },
-  },
   schema: {
-    types: schemaTypes,
-    templates: (templates) => [
-      ...templates,
-      {
-        id: 'page-default',
-        title: 'דף חדש',
-        schemaType: 'page',
-        value: {
-          content: [
-            {"_type": 'block', style: 'h2', children: [{"_type": 'span', text: 'כותרת'}]},
-            {"_type": 'block', children: [{"_type": 'span', text: 'תוכן הדף...'}]},
-          ],
-        },
-      },
-      {
-        id: 'post-default',
-        title: 'פוסט חדש',
-        schemaType: 'post',
-        value: {publishedAt: new Date().toISOString()},
-      },
+    types: [
+      // מסמכים
+      simplePost,
+      page,
+      category,
+      siteSettings,
+      
+      // אובייקטים
+      seo,
+      mainImage,
+      blockContent,
     ],
   },
 })

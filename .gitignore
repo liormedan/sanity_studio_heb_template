@@ -1,26 +1,53 @@
-# Logs
-logs
-*.log
+# Dependencies
+node_modules/
+*/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
+*/package-lock.json
 
-# Node
-node_modules/
-studio/node_modules/
+# Production builds
+dist/
+.next/
+out/
 
-# Sanity build/cache
-studio/.sanity/
-studio/dist/
-
-# Env
+# Environment variables
 .env
-*.local
-studio/.env
+.env.local
+.env.production
+*/.env
+*/.env.local
+*/.env.production
 
-# OS/Editor
-.DS_Store
-Thumbs.db
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
+# OS
+.DS_Store
+Thumbs.db
+
+# Sanity
+.sanity/
+*/.sanity/
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Temporary folders
+tmp/
+temp/
