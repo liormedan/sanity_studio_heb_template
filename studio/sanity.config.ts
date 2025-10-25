@@ -1,6 +1,5 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
-import {visionTool} from '@sanity/vision'
 import RtlLayout from './src/components/RtlLayout'
 
 // סכמות פשוטות
@@ -136,7 +135,6 @@ export default defineConfig({
               ),
           ]),
     }),
-    visionTool(),
   ],
 
   studio: {
@@ -144,6 +142,9 @@ export default defineConfig({
       layout: RtlLayout,
     },
   },
+
+  // הסתרת כלים מהתפריט הצדדי
+  tools: (prev) => prev.filter((tool) => tool.name === 'desk'),
 
   schema: {
     types: [
