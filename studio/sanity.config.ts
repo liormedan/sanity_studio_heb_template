@@ -75,6 +75,15 @@ export default defineConfig({
   projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   dataset: process.env.SANITY_STUDIO_DATASET!,
 
+  cors: {
+    allowCredentials: true,
+    allowOrigins: [
+      'http://localhost:3000',
+      'https://sanity-studio-heb-template-website.vercel.app',
+      /^https:\/\/.*\.vercel\.app$/
+    ]
+  },
+
   plugins: [
     deskTool({
       structure: (S) =>
