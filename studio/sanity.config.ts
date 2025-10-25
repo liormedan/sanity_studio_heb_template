@@ -1,6 +1,6 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
-import RtlLayout from './src/components/RtlLayout'
+import SimpleRtlLayout from './src/components/SimpleRtlLayout'
 
 // סכמות פשוטות
 import page from './src/schemas/page'
@@ -88,58 +88,19 @@ export default defineConfig({
       structure: (S) =>
         S.list()
           .id('root')
-          .title('תוכן האתר')
+          .title('ניהול תוכן')
           .items([
-            // פוסטים
-            S.listItem()
-              .id('posts')
-              .title('📝 פוסטים')
-              .child(
-                S.documentTypeList('post')
-                  .id('postsList')
-                  .title('כל הפוסטים')
-              ),
-            
-            // דפים
-            S.listItem()
-              .id('pages')
-              .title('📄 דפים')
-              .child(
-                S.documentTypeList('page')
-                  .id('pagesList')
-                  .title('כל הדפים')
-              ),
-            
-            // קטגוריות
-            S.listItem()
-              .id('categories')
-              .title('🏷️ קטגוריות')
-              .child(
-                S.documentTypeList('category')
-                  .id('categoriesList')
-                  .title('כל הקטגוריות')
-              ),
-
-            S.divider(),
-            
-            // הגדרות
-            S.listItem()
-              .id('siteSettings')
-              .title('⚙️ הגדרות האתר')
-              .child(
-                S.document()
-                  .schemaType('siteSettings')
-                  .documentId('siteSettings')
-                  .id('siteSettingsDoc')
-                  .title('הגדרות האתר')
-              ),
+            S.documentTypeListItem('post').title('פוסטים'),
+            S.documentTypeListItem('page').title('דפים'),
+            S.documentTypeListItem('category').title('קטגוריות'),
+            S.documentTypeListItem('siteSettings').title('הגדרות אתר'),
           ]),
     }),
   ],
 
   studio: {
     components: {
-      layout: RtlLayout,
+      layout: SimpleRtlLayout,
     },
   },
 
