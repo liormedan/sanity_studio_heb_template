@@ -23,6 +23,7 @@ export default async function PostPage({ params }: PageProps) {
     console.log('Fetching post with slug:', slug)
     const post: Post = await client.fetch(queries.post, { slug })
     console.log('Post found:', !!post, post?.title)
+    console.log('Post body:', post?.body)
     
     if (!post) {
       console.log('Post not found, calling notFound()')
@@ -88,16 +89,43 @@ export default async function PostPage({ params }: PageProps) {
 
           {/* Post Body */}
           <div className="bg-gray-800/30 backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-gray-700">
-            {post.body ? (
+            {post.body && post.body.length > 0 ? (
               <div className="prose prose-lg prose-invert max-w-none">
                 <div className="text-gray-300 leading-relaxed space-y-6">
-                  {/* כאן נוכל להוסיף רנדור של Portable Text בעתיד */}
-                  <p className="text-lg">
-                    תוכן הפוסט יוצג כאן. כרגע זה placeholder - נוכל להוסיף רנדור של Portable Text מ-Sanity.
-                  </p>
-                  <p>
-                    זהו דף הפוסט הבודד שמציג את התוכן המלא של הפוסט "{post.title}".
-                  </p>
+                  {post.body.map((block: any, index: number) => {
+                    if (block._type === 'block') {
+                      const text = block.children?.map((child: any) => child.text).join('') || ''
+                      
+                      // רנדור לפי סגנון הבלוק
+                      switch (block.style) {
+                        case 'h1':
+                          return (
+                            <h1 key={index} className="text-3xl font-bold text-white mb-4">
+                              {text}
+                            </h1>
+                          )
+                        case 'h2':
+                          return (
+                            <h2 key={index} className="text-2xl font-bold text-white mb-3">
+                              {text}
+                            </h2>
+                          )
+                        case 'h3':
+                          return (
+                            <h3 key={index} className="text-xl font-bold text-white mb-2">
+                              {text}
+                            </h3>
+                          )
+                        default:
+                          return (
+                            <p key={index} className="text-lg leading-relaxed mb-4">
+                              {text}
+                            </p>
+                          )
+                      }
+                    }
+                    return null
+                  })}
                 </div>
               </div>
             ) : (
