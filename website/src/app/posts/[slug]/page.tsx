@@ -14,14 +14,18 @@ interface Post {
 }
 
 interface PageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export default async function PostPage({ params }: PageProps) {
   try {
-    const post: Post = await client.fetch(queries.post, { slug: params.slug })
+    const { slug } = await params
+    console.log('Fetching post with slug:', slug)
+    const post: Post = await client.fetch(queries.post, { slug })
+    console.log('Post found:', !!post, post?.title)
     
     if (!post) {
+      console.log('Post not found, calling notFound()')
       notFound()
     }
 
@@ -131,13 +135,32 @@ export default async function PostPage({ params }: PageProps) {
   }
 }
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
+// Generate static params for all posts
+export async function generateStaticParams() {
+  try {
+    const posts = await client.fetch(`*[_type == "post" && defined(slug.current)]{
+      "slug": slug.current
+    }`)
+    
+    console.log('Generated static params for posts:', posts)
+    
+    return posts.map((post: { slug: string }) => ({
+      slug: post.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
+// Enable ISR (Incremental Static Regeneration)
+export const revalidate = 60
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps) {
   try {
-    const post: Post = await client.fetch(queries.post, { slug: params.slug })
+    const { slug } = await params
+    const post: Post = await client.fetch(queries.post, { slug })
     
     if (!post) {
       return {
