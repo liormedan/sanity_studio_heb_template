@@ -1,6 +1,6 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
-import RtlLayout from './src/components/RtlLayout'
+import SimpleLayout from './src/components/SimpleLayout'
 
 // סכמות
 import page from './src/schemas/page'
@@ -100,7 +100,7 @@ export default defineConfig({
 
   studio: {
     components: {
-      layout: RtlLayout,
+      layout: SimpleLayout,
     },
   },
 
