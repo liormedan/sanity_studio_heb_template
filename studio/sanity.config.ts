@@ -104,7 +104,7 @@ export default defineConfig({
     },
   },
 
-  tools: (prev) => prev.filter((tool) => tool.name === 'desk'),
+  // אין צורך לפלטר כלים - נשאיר את הברירת מחדל
 
   schema: {
     types: [
