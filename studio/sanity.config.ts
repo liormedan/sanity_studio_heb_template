@@ -1,6 +1,7 @@
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import SimpleLayout from './src/components/SimpleLayout'
+import websiteLinkTool from './src/tools/websiteLink'
 
 // סכמות
 import page from './src/schemas/page'
@@ -96,6 +97,7 @@ export default defineConfig({
             S.documentTypeListItem('siteSettings').title('הגדרות אתר'),
           ]),
     }),
+    websiteLinkTool(),
   ],
 
   studio: {
