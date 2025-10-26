@@ -2,7 +2,7 @@ import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import RtlLayout from './src/components/RtlLayout'
 
-// סכמות פשוטות
+// סכמות
 import page from './src/schemas/page'
 import category from './src/schemas/category'
 import siteSettings from './src/schemas/siteSettings'
@@ -12,10 +12,10 @@ import seo from './src/schemas/objects/seo'
 import mainImage from './src/schemas/objects/mainImage'
 import blockContent from './src/schemas/objects/blockContent'
 
-// פוסט פשוט
+// פוסט
 import {defineField, defineType} from 'sanity'
 
-const simplePost = defineType({
+const post = defineType({
   name: 'post',
   title: 'פוסט',
   type: 'document',
@@ -69,7 +69,7 @@ const simplePost = defineType({
 
 export default defineConfig({
   name: 'hebrew-content-studio',
-  title: 'סטודיו תוכן בעברית - פשוט',
+  title: 'סטודיו תוכן בעברית',
 
   projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   dataset: process.env.SANITY_STUDIO_DATASET!,
@@ -104,18 +104,14 @@ export default defineConfig({
     },
   },
 
-  // הסתרת כלים מהתפריט הצדדי
   tools: (prev) => prev.filter((tool) => tool.name === 'desk'),
 
   schema: {
     types: [
-      // מסמכים
-      simplePost,
+      post,
       page,
       category,
       siteSettings,
-      
-      // אובייקטים
       seo,
       mainImage,
       blockContent,
