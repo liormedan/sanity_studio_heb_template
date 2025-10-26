@@ -28,3 +28,6 @@ export default async function Home() {
     )
   }
 }
+
+// Force dynamic rendering for immediate updates
+export const dynamic = 'force-dynamic'

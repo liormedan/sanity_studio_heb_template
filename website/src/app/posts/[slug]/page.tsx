@@ -163,26 +163,8 @@ export default async function PostPage({ params }: PageProps) {
   }
 }
 
-// Generate static params for all posts
-export async function generateStaticParams() {
-  try {
-    const posts = await client.fetch(`*[_type == "post" && defined(slug.current)]{
-      "slug": slug.current
-    }`)
-    
-    console.log('Generated static params for posts:', posts)
-    
-    return posts.map((post: { slug: string }) => ({
-      slug: post.slug,
-    }))
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
-}
-
-// Enable ISR (Incremental Static Regeneration)
-export const revalidate = 60
+// Force dynamic rendering for immediate updates
+export const dynamic = 'force-dynamic'
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps) {
